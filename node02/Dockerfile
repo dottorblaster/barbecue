@@ -9,7 +9,7 @@ RUN git clone https://github.com/fabriziosestito/fakemall.git
 WORKDIR /fakemall
 RUN cargo build
 
-FROM debian
+FROM registry.suse.com/bci/bci-base
 COPY --from=agent-builder /go/agent/trento-agent /usr/bin/trento-agent
 COPY --from=fakemall-builder /fakemall/target/debug/fakemall /usr/bin/fakemall
 COPY . /
