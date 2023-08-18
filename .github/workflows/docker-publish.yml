@@ -21,8 +21,10 @@ env:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node_name: [node01, node02]
     permissions:
       contents: read
       packages: write
@@ -58,22 +60,12 @@ jobs:
 
       # Build and push Docker image with Buildx (don't push on PR)
       # https://github.com/docker/build-push-action
-      - name: Build and push Docker image
-        id: build-and-push-node01
+      - name: Build and push Docker image for ${{ matrix.node_name }}
+        id: build-and-push-docker-image
         uses: docker/build-push-action@ac9327eae2b366085ac7f6a2d02df8aa8ead720a
         with:
-          context: node01
+          context: ${{ matrix.node_name }}
           push: ${{ github.event_name != 'pull_request' }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          tags: ghcr.io/${{ github.repository }}-node01:latest
-
-      - name: Build and push Docker image
-        id: build-and-push-node02
-        uses: docker/build-push-action@ac9327eae2b366085ac7f6a2d02df8aa8ead720a
-        with:
-          context: node02
-          push: ${{ github.event_name != 'pull_request' }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-          tags: ghcr.io/${{ github.repository }}-node02:latest
+          tags: ghcr.io/${{ github.repository }}-${{ matrix.node_name }}:latest
