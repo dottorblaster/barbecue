@@ -24,7 +24,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node_name: [node01, node02]
+        node_name: [hana_node01, hana_node02]
     permissions:
       contents: read
       packages: write
